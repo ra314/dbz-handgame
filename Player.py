@@ -22,6 +22,7 @@ class Player:
 
   def attack(self, attack, defender):
     self.num_charges -= attack.num_charges_needed
+    print(attack)
     if defender.curr_evasion_method != attack.evasion_method:
       defender.change_HP(-attack.power)
 
