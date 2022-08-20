@@ -60,7 +60,7 @@ class Player:
     self.num_charges += 1
 
   def set_evasion_method(self, evasion_method):
-    self.evasion_method = evasion_method
+    self.curr_evasion_method = evasion_method
   
   evasion_actions = set(["Dodge", "Block"])
   def is_evasive_action(action_str):
