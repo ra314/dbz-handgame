@@ -15,7 +15,8 @@ class Player:
 	  return self._name
 
   def draw(self):
-    HP_str = ('+' * int(self.curr_HP/5)) + ('-' * int((self.max_HP - self.curr_HP)/5))
+    HP_PER_SYMBOL = 10
+    HP_str = ('+' * int(self.curr_HP/HP_PER_SYMBOL)) + ('-' * int((self.max_HP - self.curr_HP)/HP_PER_SYMBOL))
     return f"{self._name} \n" \
            f"HP: {HP_str} \n"
 
@@ -44,9 +45,7 @@ class Player:
 	  return actions_str, actions
 
   def change_HP(self, delta):
-	  # Clamping HP
-	  # The max of current and max hp is done in the case of the start where p2 has 5 extra HP
-	  self.curr_HP = min(max(0, delta+self.curr_HP), max(self.curr_HP, Player.max_HP))
+	  self.curr_HP += delta
 	  self._game.draw()
 
   def add_game_reference_to_objects(self, game):
