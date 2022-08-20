@@ -40,3 +40,7 @@ class Game:
     # reset_evasion_state
     for player in self._players:
       player.reset_evasion_state()
+  
+  def get_other_player(self, player):
+    index = self._players.index(player)
+    return self._players[1-index] 
