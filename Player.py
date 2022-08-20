@@ -32,7 +32,7 @@ class Player:
     for attack in attacks:
       if self.num_charges >= attack.num_charges_needed:
         attack_actions_str.append(attack.name)
-        attack_actions.append(lambda: self.attack(attack, self._game.get_other_player(self)))
+        attack_actions.append(lambda attack=attack: self.attack(attack, self._game.get_other_player(self)))
     return attack_actions_str, attack_actions
 
   def get_actions(self):
