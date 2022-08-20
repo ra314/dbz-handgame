@@ -38,15 +38,15 @@ def receive_and_send_client_action(players_and_clients, game):
 		  client.send(message_to_client.encode())
 		  print("Waiting for response")
 		  response = (client.recv(BUF_SIZE)).decode('utf-8')
-		  if !response.isdigit():
+		  if not response.isdigit():
 		    print("An integer was not provided by the client.")
 		    continue
 		  num = int(response)
 		  if num >= len(actions):
 		    print("The selection action is out of bounds.")
 		    continue
-		  actions_to_take.append((actions_str[num], actions[num])
-	game.process_moves(actions_to_take)
+		  actions_to_take.append((actions_str[num], actions[num]))
+  game.process_moves(actions_to_take)
 
 def end_session(client):
 	client.send("Session Over.\n".encode())
