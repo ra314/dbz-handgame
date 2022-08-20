@@ -18,7 +18,8 @@ class Player:
     HP_PER_SYMBOL = 10
     HP_str = ('+' * int(self.curr_HP/HP_PER_SYMBOL)) + ('-' * int((self.max_HP - self.curr_HP)/HP_PER_SYMBOL))
     return f"{self._name} \n" \
-           f"HP: {HP_str} \n"
+           f"HP: {HP_str} \n" \
+           f"Charges: {self.num_charges} \n" \
 
   def attack(self, attack, defender):
     self.num_charges -= attack.num_charges_needed
@@ -29,7 +30,7 @@ class Player:
   def get_available_attacks(self):
     attack_actions_str, attack_actions = [], []
     for attack in attacks:
-      if attack.num_charges_needed <= self.num_charges:
+      if self.num_charges >= attack.num_charges_needed:
         attack_actions_str.append(attack.name)
         attack_actions.append(lambda: self.attack(attack, self._game.get_other_player(self)))
     return attack_actions_str, attack_actions
