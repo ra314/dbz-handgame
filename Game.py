@@ -4,8 +4,6 @@ from Player import Player
 class Game:
   def __init__(self, player1, player2):
 	  self._players = (player1, player2)
-	  self.curr_player = None
-	  self.next_player = None
 	  self.draw_buffer = []
 	  self._start()
 
@@ -30,14 +28,15 @@ class Game:
 	  self.draw()
 	  return player_actions_str, player_actions
 
-  def process_move(self, moves):
+  def process_moves(self, moves):
+    # Make the evasive actions go before the attacking actions
     for action_str, action in moves:
       if Player.is_evasive_action(action_str):
         action()
     for action_str, action in moves:
-      if not is_evasive_action:
+      if not Player.is_evasive_action(action_str):
         action()
 
     # reset_evasion_state
-    self.curr_player.reset_evasion_state()
-    self.next_player.reset_evasion_state()
+    for player in self._players:
+      player.reset_evasion_state()

@@ -63,5 +63,5 @@ class Player:
   
   evasion_actions = set(["Dodge", "Block"])
   def is_evasive_action(action_str):
-    return action_str in evasion_actions
+    return action_str in Player.evasion_actions
 
