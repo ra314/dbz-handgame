@@ -4,7 +4,7 @@ from copy import deepcopy
 
 
 def enumerate_choices(choices):
-	output = "Pick to number to select a choice\n"
+	output = "Pick a number to select a choice\n"
 	for index, choice in enumerate(choices):
 		output += f"[{index}]: {choice}\n"
 	return output
@@ -25,7 +25,7 @@ def broadcast(client1, client2, message):
 def receive_and_send_client_action(players_and_clients, game):
   actions_to_take = []
   for player, client in players_and_clients:
-	  actions, actions_str = game.request_move()
+	  actions_str, actions = game.request_move(player)
 	  assert(len(actions_str)>0)
 	  assert(len(actions_str) == len(actions))
 	  
@@ -34,7 +34,7 @@ def receive_and_send_client_action(players_and_clients, game):
 				          f"{enumerate_choices(actions_str)}{separator}")  
 	  print(message_to_client)
 	  
-	  while not input_sucessfully_processed:
+	  while True:
 		  client.send(message_to_client.encode())
 		  print("Waiting for response")
 		  response = (client.recv(BUF_SIZE)).decode('utf-8')
@@ -46,6 +46,8 @@ def receive_and_send_client_action(players_and_clients, game):
 		    print("The selection action is out of bounds.")
 		    continue
 		  actions_to_take.append((actions_str[num], actions[num]))
+		  break
+  print(f"\"{actions_to_take}\" was selected as an action.")
   game.process_moves(actions_to_take)
 
 def end_session(client):

@@ -16,18 +16,12 @@ class Game:
 
   def _start(self):
 	  self._add_game_reference_to_objects()
-	  self._select_first_player()
+	  self.draw_buffer.append(f'Game starting now. \n')
 
   def _add_game_reference_to_objects(self):
 	  for player in self._players:
 		  player.add_game_reference_to_objects(self)
-		  
-  def _select_first_player(self):
-	  players = list(self._players)
-	  random.shuffle(players)
-	  self.curr_player, self.next_player = players
-	  self.draw_buffer.append(f'The first player is {self.curr_player}. \n')
-
+	
   def request_move(self, player):
 	  # Getting and adding actions from the player
 	  player_actions_str, player_actions = player.get_actions()
