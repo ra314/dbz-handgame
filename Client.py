@@ -1,5 +1,7 @@
 import os
 from PrepareSocket import *
+from multiprocessing import Process, Queue
+import sys
 
 # Responding to the server
 def respond():
@@ -8,31 +10,36 @@ def respond():
 	if message:
 		sock.send(message.encode())
 
-# Listening to the server
-def communicate():
-	# Parsing server info
-	data = sock.recv(BUF_SIZE).decode('utf-8')
-	# Parsing data buffer
-	data_buffer = data.split(separator)
-	# Going through the buffer
-	while data_buffer:
-		# Retrieving latest part of buffer
-		data = data_buffer.pop(0)
-		if data == "":
-			continue
-		# Clearing previous print
-		os.system('cls' if os.name == 'nt' else 'clear')
-		print(data, end="")
+def read_from_network(data_queue):
+  while True:
+    # Parsing server info
+    data = sock.recv(BUF_SIZE).decode('utf-8')
+    # Parsing data buffer
+    for data_chunk in data.split(separator):
+      data_queue.put(data_chunk)
 
-		# Ending session
-		if data == "Session Over.\n":
-			return 0
-			
-		respond()
+def process_data_queue(data_queue):
+  while True:
+    # Retrieving latest part of buffer
+    data = data_queue.get()
+    if data == "":
+      continue
+	  # Clearing previous print
+    os.system('cls' if os.name == 'nt' else 'clear')
+    print(data, end="")
 
-	return 1
+	  # Ending session
+    if data == "Session Over.\n":
+      return 0
+		  
+    respond()
 
-# Connecting to server
-sock.connect((TCP_IP, T_PORT))
-while communicate():
-	pass
+if __name__ == "__main__":
+  data_queue = Queue()
+  # Connecting to server
+  sock.connect((TCP_IP, T_PORT))
+  # Data retrival loop
+  retrival_process = Process(target=read_from_network, args=(data_queue,), name="retriever")
+  retrival_process.start()
+  # Data processing loop
+  process_data_queue(data_queue)
