@@ -4,13 +4,13 @@ from multiprocessing import Process, Queue
 import sys
 
 # Responding to the server
-def respond():
+def respond(sock):
 	# Sending back a message, if the input isn't empty
 	message = input()
 	if message:
 		sock.send(message.encode())
 
-def read_from_network(data_queue):
+def read_from_network(data_queue, sock):
   while True:
     # Parsing server info
     data = sock.recv(BUF_SIZE).decode('utf-8')
@@ -18,7 +18,7 @@ def read_from_network(data_queue):
     for data_chunk in data.split(separator):
       data_queue.put(data_chunk)
 
-def process_data_queue(data_queue):
+def process_data_queue(data_queue, sock):
   while True:
     # Retrieving latest part of buffer
     data = data_queue.get()
@@ -32,7 +32,7 @@ def process_data_queue(data_queue):
     if data == "Session Over.\n":
       return 0
 		  
-    respond()
+    respond(sock)
 
 if __name__ == "__main__":
   data_queue = Queue()
@@ -40,7 +40,7 @@ if __name__ == "__main__":
   sock, TCP_IP = create_socket()
   sock.connect((TCP_IP, T_PORT))
   # Data retrival loop
-  retrival_process = Process(target=read_from_network, args=(data_queue,), name="retriever")
+  retrival_process = Process(target=read_from_network, args=(data_queue,sock,), name="retriever")
   retrival_process.start()
   # Data processing loop
-  process_data_queue(data_queue)
+  process_data_queue(data_queue, sock)
