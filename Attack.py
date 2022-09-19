@@ -1,4 +1,4 @@
-import Evasion
+from Evasion import Evasion
 
 class Attack:
   def __init__(self, name, num_charges_needed, evasion_method):
