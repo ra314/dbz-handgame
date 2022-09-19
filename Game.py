@@ -31,10 +31,10 @@ class Game:
   def process_moves(self, moves):
     # Make the evasive actions go before the attacking actions
     for action_str, action in moves:
-      if Player.is_non_offensive_action(action_str):
+      if action_str in Player.non_offensive_actions:
         action()
     for action_str, action in moves:
-      if not Player.is_non_offensive_action(action_str):
+      if action_str not in Player.non_offensive_actions:
         action()
 
     # reset_evasion_state

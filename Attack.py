@@ -13,3 +13,5 @@ class Attack:
 attacks = [Attack("Kamehameha", 1, Evasion.DODGE),\
          Attack("Sayonara", 2, Evasion.BLOCK),\
          Attack("Spin Kamehameha", 3, Evasion.BLOCK)]
+
+indexed_attacks = {attack.name: attack for attack in attacks}

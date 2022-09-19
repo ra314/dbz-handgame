@@ -1,7 +1,7 @@
 from Player import Player
 from Game import Game
 from copy import deepcopy
-
+import numpy as np
 
 def enumerate_choices(choices):
 	output = "Pick a number to select a choice\n"
@@ -53,6 +53,23 @@ def receive_and_send_client_action(players_and_clients, game):
 def end_session(client):
 	client.send("Session Over.\n".encode())
 
+
+# UNIT TESTING
+# Testing Player.get_payout_table
+want = [['Dodge', 'Block', 'Charge', 'Kamehameha'], [0,0,-1,1],[0,0,-1,-1],[1,1,0,-1],[-1,1,1,0]]
+test_player1, test_player2 = Player(''), Player('')
+test_player1.increase_charge()
+test_player2.increase_charge()
+got = Player.get_payout_table(test_player1, test_player2)
+got.insert(0, test_player1.get_actions()[0])
+assert(got == want)
+
+# Testing AI reccomendation
+test_game = Game(test_player1, test_player2)
+assert(np.allclose(np.array(test_player1.get_AI_action()[0]), np.array([[0.33333333, 0.        , 0.33333333, 0.33333333], [0.33333333, 0.        , 0.33333333, 0.33333333]])))
+test_player1.num_charges = 0
+test_player2.num_charges = 0
+assert(test_player1.get_AI_action()[1]=="Charge")
 
 from PrepareSocket import *
 
