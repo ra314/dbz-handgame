@@ -22,7 +22,7 @@ class Player:
            f"Charges: {self.num_charges} \n" \
 
   def attack(self, attack, defender):
-    self.num_charges -= attack.num_charges_needed
+    self.num_charges = max(0, self.num_charges-attack.num_charges_needed)
     print(attack)
     if defender.curr_evasion_method != attack.evasion_method:
       defender.change_HP(-attack.power)
