@@ -57,6 +57,7 @@ def end_session(client):
 from PrepareSocket import *
 
 # Connecting to clients
+sock, TCP_IP = create_socket()
 sock.bind((TCP_IP, T_PORT))
 sock.listen()
 client1, addr1 = sock.accept()

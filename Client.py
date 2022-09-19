@@ -37,6 +37,7 @@ def process_data_queue(data_queue):
 if __name__ == "__main__":
   data_queue = Queue()
   # Connecting to server
+  sock, TCP_IP = create_socket()
   sock.connect((TCP_IP, T_PORT))
   # Data retrival loop
   retrival_process = Process(target=read_from_network, args=(data_queue,), name="retriever")
