@@ -64,7 +64,7 @@ class Player:
   def set_evasion_method(self, evasion_method):
     self.curr_evasion_method = evasion_method
   
-  evasion_actions = set(["Dodge", "Block"])
-  def is_evasive_action(action_str):
-    return action_str in Player.evasion_actions
+  non_offensive_actions = set(["Dodge", "Block"])
+  def is_non_offensive_action(action_str):
+    return action_str in Player.non_offensive_actions
 
