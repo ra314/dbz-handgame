@@ -26,6 +26,8 @@ class Player:
     print(attack)
     if defender.curr_evasion_method != attack.evasion_method:
       defender.change_HP(-attack.power)
+      # Take away charges if you get hit
+      defender.num_charges = 0
 
   def get_available_attacks(self):
     attack_actions_str, attack_actions = [], []
