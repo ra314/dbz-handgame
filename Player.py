@@ -10,6 +10,7 @@ class Player:
 	  self._game = None
 	  self.num_charges = 0
 	  self.curr_evasion_method = 0
+	  self.prev_action = ""
 
   def __str__(self):
 	  return self._name
@@ -20,10 +21,11 @@ class Player:
     return f"{self._name} \n" \
            f"HP: {HP_str} \n" \
            f"Charges: {self.num_charges} \n" \
+           f"Previous action: {self.prev_action} \n" \
 
   def attack(self, attack, defender):
+    self.prev_action = f"Performed {attack.name}"
     self.num_charges = max(0, self.num_charges-attack.num_charges_needed)
-    print(attack)
     if defender.curr_evasion_method != attack.evasion_method:
       defender.change_HP(-attack.power)
       # Take away charges if you get hit
@@ -59,9 +61,11 @@ class Player:
     self.curr_evasion_method = 0
 
   def increase_charge(self):
+    self.prev_action = "Tried to charge"
     self.num_charges += 1
 
   def set_evasion_method(self, evasion_method):
+    self.prev_action = f"Tried to {evasion_method}"
     self.curr_evasion_method = evasion_method
   
   non_offensive_actions = set(["Dodge", "Block", "Charge"])
