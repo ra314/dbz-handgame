@@ -46,26 +46,27 @@ class Networked_Client(ClientWrapper):
     self.connection = connection
     self.player = None
   def create_player(self):
-    connection.send("Send name: ".encode())
-    name = (connection.recv(BUF_SIZE)).decode('utf-8')
+    self.connection.send("Send name: ".encode())
+    name = (self.connection.recv(BUF_SIZE)).decode('utf-8')
     self.player = Player(name)
   def send_message(self, message):
-    connection.send(message.encode())
+    self.connection.send(message.encode())
   def end_session(self):
-	  connection.send("Session Over.\n".encode())
+	  self.connection.send("Session Over.\n".encode())
   def select_action(self):
-    actions_str, actions = player.get_actions()
+    actions_str, actions = self.player.get_actions()
     assert(len(actions_str)>0)
     assert(len(actions_str) == len(actions))
-
+    
+    game.draw() # Populate the draw buffer
     message_to_client = str(
 		              f"{game.draw_buffer.pop(0)} \n\n"
 		              f"{enumerate_choices(actions_str)}{separator}")
 
     while True:
-      connection.send(message_to_client.encode())
+      self.connection.send(message_to_client.encode())
       print("Waiting for response")
-      response = (connection.recv(BUF_SIZE)).decode('utf-8')
+      response = (self.connection.recv(BUF_SIZE)).decode('utf-8')
       if not response.isdigit():
         print("An integer was not provided by the client.")
         continue
