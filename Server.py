@@ -17,7 +17,7 @@ class ClientWrapper:
     pass
   def end_session(self):
     pass
-  def select_action(self):
+  def select_action(self, game_state_str):
     pass
   def __str__(self):
     return str(self.player)
@@ -35,7 +35,7 @@ class AI_Client(ClientWrapper):
     pass
   def end_session(self):
     pass
-  def select_action(self):
+  def select_action(self, game_state_str):
     eqs, action_str, action = self.player.get_AI_action()
     action_str_and_probs = [f"{action_str}:{prob:.2f}" for prob, action_str in zip(eqs[0][0], self.player.get_actions()[0])]
     print(", ".join(action_str_and_probs))
@@ -53,14 +53,13 @@ class Networked_Client(ClientWrapper):
     self.connection.send(message.encode())
   def end_session(self):
 	  self.connection.send("Session Over.\n".encode())
-  def select_action(self):
+  def select_action(self, game_state_str):
     actions_str, actions = self.player.get_actions()
     assert(len(actions_str)>0)
     assert(len(actions_str) == len(actions))
     
-    game.draw() # Populate the draw buffer
     message_to_client = str(
-		              f"{game.draw_buffer.pop(0)} \n\n"
+		              f"{game_state_str} \n\n"
 		              f"{enumerate_choices(actions_str)}{separator}")
 
     while True:
@@ -125,7 +124,7 @@ if num_AI == 2:
   client1 = AI_Client(None)
   client2 = AI_Client(None)
 elif num_AI == 1:
-  client1, client2 = Networked_Client(sock.accept()[0]), AI_Client(None)
+  client1, client2 = AI_Client(None), Networked_Client(sock.accept()[0])
 elif num_AI == 2:
   client1, client2 = Networked_Client(sock.accept()[0]), Networked_Client(sock.accept()[0])
 
@@ -136,16 +135,9 @@ game = Game(client1.player, client2.player)
 
 # Gameplay Loop
 while True:
-  game.draw()
-  while game.draw_buffer:
-    frame = game.draw_buffer.pop(0)
-    client1.send_message(frame)
-    client2.send_message(frame)
-    print(frame)
-  actions_to_take = [client1.select_action(), client2.select_action()]
+  actions_to_take = [client1.select_action(game.draw()), client2.select_action(game.draw())]
   # print(f"\"{actions_to_take}\" was selected as an action.")
   game.process_moves(actions_to_take)
-  input()
 
 # Ending connections with clients
 client1.end_session()

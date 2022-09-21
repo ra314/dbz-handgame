@@ -8,13 +8,12 @@ class Game:
 	  self._start()
 
   def draw(self):
-	  self.draw_buffer.append(
+	  return (
 		  f'{self._players[0].draw()} \n\n'
 		  f'{self._players[1].draw()} \n\n')
 
   def _start(self):
 	  self._add_game_reference_to_objects()
-	  self.draw_buffer.append(f'Game starting now. \n')
 
   def _add_game_reference_to_objects(self):
 	  for player in self._players:
