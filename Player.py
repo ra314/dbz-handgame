@@ -109,7 +109,6 @@ class Player:
   
   def change_HP(self, delta):
 	  self.curr_HP += delta
-	  self._game.draw()
 
   def add_game_reference_to_objects(self, game):
 	  self._game = game

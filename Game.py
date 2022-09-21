@@ -19,14 +19,6 @@ class Game:
   def _add_game_reference_to_objects(self):
 	  for player in self._players:
 		  player.add_game_reference_to_objects(self)
-	
-  def request_move(self, player):
-	  # Getting and adding actions from the player
-	  player_actions_str, player_actions = player.get_actions()
-
-	  # Draw game and send available actions to server
-	  self.draw()
-	  return player_actions_str, player_actions
 
   def process_moves(self, moves):
     # Make the evasive actions go before the attacking actions
