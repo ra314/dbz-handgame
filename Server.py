@@ -135,10 +135,19 @@ game = Game(client1.player, client2.player)
 
 # Gameplay Loop
 while True:
+  print(game.draw())
   actions_to_take = [client1.select_action(game.draw()), client2.select_action(game.draw())]
   # print(f"\"{actions_to_take}\" was selected as an action.")
   game.process_moves(actions_to_take)
+  if game.get_num_dead_players() > 0:
+    break
 
 # Ending connections with clients
+print(game.draw())
+client1.send_message(game.draw())
+client2.send_message(game.draw())
+print(game.get_end_screen())
+client1.send_message(game.get_end_screen())
+client2.send_message(game.get_end_screen())
 client1.end_session()
 client2.end_session()

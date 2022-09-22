@@ -108,7 +108,10 @@ class Player:
     return table
   
   def change_HP(self, delta):
-	  self.curr_HP += delta
+	  self.curr_HP = max(self.curr_HP+delta, 0)
+	
+  def is_dead(self):
+    return self.curr_HP == 0
 
   def add_game_reference_to_objects(self, game):
 	  self._game = game

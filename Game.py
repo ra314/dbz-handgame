@@ -35,3 +35,24 @@ class Game:
   def get_other_player(self, player):
     index = self._players.index(player)
     return self._players[1-index] 
+  
+  def get_num_dead_players(self):
+    return sum([player.is_dead() for player in self._players])
+  
+  def get_loser(self):
+    dead_people = list(filter(lambda x: x.is_dead(), self._players))
+    if len(dead_people) == 1:
+      return dead_people[0]
+    return None
+  
+  def get_end_screen(self):
+    num_dead_players = self.get_num_dead_players()
+    if num_dead_players == 0:
+      return ""
+    elif num_dead_players == 2:
+      return f"Both{self._players[0]._name} and {self._players[1]._name} died"
+    elif num_dead_players == 1:
+      loser = self.get_loser()
+      winner = self.get_other_player(loser)
+      return f"{winner} won and {loser} lost"
+    return ""
