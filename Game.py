@@ -50,7 +50,7 @@ class Game:
     if num_dead_players == 0:
       return ""
     elif num_dead_players == 2:
-      return f"Both{self._players[0]._name} and {self._players[1]._name} died"
+      return f"Both{self._players[0]._name} and {self._players[1]._name} died\n"
     elif num_dead_players == 1:
       loser = self.get_loser()
       winner = self.get_other_player(loser)

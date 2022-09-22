@@ -125,7 +125,7 @@ if num_AI == 2:
   client2 = AI_Client(None)
 elif num_AI == 1:
   client1, client2 = AI_Client(None), Networked_Client(sock.accept()[0])
-elif num_AI == 2:
+elif num_AI == 0:
   client1, client2 = Networked_Client(sock.accept()[0]), Networked_Client(sock.accept()[0])
 
 # Getting player names
