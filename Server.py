@@ -4,18 +4,22 @@ from copy import deepcopy
 import numpy as np
 from PrepareSocket import *
 from AI import *
+from abc import ABC, abstractmethod
 
-
-class ClientWrapper:
+class ClientWrapper(ABC):
+  @abstractmethod
   def __init__(self, connection):
-    self.player = None
     pass
+  @abstractmethod
   def create_player(self):
     pass
+  @abstractmethod
   def send_message(self, message):
     pass
+  @abstractmethod
   def end_session(self):
     pass
+  @abstractmethod
   def select_action(self, game_state_str):
     pass
   def __str__(self):
@@ -90,7 +94,7 @@ if __name__ == "__main__":
   test_player1, test_player2 = Player('', evaluators[0]), Player('', evaluators[0])
   test_player1.increase_charge()
   test_player2.increase_charge()
-  got = Player.get_payout_table(test_player1, test_player2, test_player1.evaluator)
+  got = Player.get_payout_table(test_player1, test_player2, test_player1.evaluator).tolist()
   got.insert(0, test_player1.get_actions()[0])
   assert(got == want)
 
