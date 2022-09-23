@@ -24,13 +24,13 @@ class ClientWrapper:
 class AI_Client(ClientWrapper):
   AI_Client_count = 0
   
-  def __init__(self, connection, eval_func):
+  def __init__(self, connection, evaluator):
     self.player = None
     AI_Client.AI_Client_count += 1
     self.name = f'AI_{AI_Client.AI_Client_count}'
-    self.eval_func = eval_func
+    self.evaluator = evaluator
   def create_player(self):
-    self.player = Player(self.name, self.eval_func)
+    self.player = Player(self.name, self.evaluator)
   def send_message(self, message):
     pass
   def end_session(self):
@@ -87,10 +87,10 @@ if __name__ == "__main__":
   # UNIT TESTING
   # Testing Player.get_payout_table
   want = [['Dodge', 'Block', 'Charge', 'Kamehameha'], [0,0,-1,1],[0,0,-1,-1],[1,1,0,-1],[-1,1,1,0]]
-  test_player1, test_player2 = Player('', eval_1), Player('', eval_1)
+  test_player1, test_player2 = Player('', evaluators[0]), Player('', evaluators[0])
   test_player1.increase_charge()
   test_player2.increase_charge()
-  got = Player.get_payout_table(test_player1, test_player2, test_player1.ai_eval_func)
+  got = Player.get_payout_table(test_player1, test_player2, test_player1.evaluator)
   got.insert(0, test_player1.get_actions()[0])
   assert(got == want)
 
@@ -121,10 +121,10 @@ if __name__ == "__main__":
     break
 
   if num_AI == 2:
-    client1 = AI_Client(None, eval_1)
-    client2 = AI_Client(None, eval_1)
+    client1 = AI_Client(None, evaluators[0])
+    client2 = AI_Client(None, evaluators[0])
   elif num_AI == 1:
-    client1, client2 = AI_Client(None, eval_1), Networked_Client(sock.accept()[0])
+    client1, client2 = AI_Client(None, evaluators[0]), Networked_Client(sock.accept()[0])
   elif num_AI == 0:
     client1, client2 = Networked_Client(sock.accept()[0]), Networked_Client(sock.accept()[0])
 

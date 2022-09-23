@@ -2,11 +2,16 @@ from Player import Player
 from Attack import indexed_attacks
 from Evasion import Evasion
 
+class Evaluator:
+  def __init__(self, eval_func, player_hasher):
+    self.eval_func = eval_func
+    # This is used to avoid repeatedly calculating the payout table if the relevant conditions
+    # (in this case the state of the player) is the same.
+    self.player_hasher = player_hasher
+
 # Methods in this file returns the evaluation of a given action pair.
 # Eval is positive if the person performing action1 ends up better off
 # Game is assumed to be zero sum
-
-
 
 def eval_1(action1_str, action2_str, player1, player2):
   if action1_str == "Charge":
@@ -38,6 +43,4 @@ def eval_1(action1_str, action2_str, player1, player2):
   else:
     assert(False)
 
-
-
-eval_funcs = [eval_1]
+evaluators = [Evaluator(eval_1, lambda x: x.num_charges)]
