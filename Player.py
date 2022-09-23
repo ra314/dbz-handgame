@@ -79,7 +79,7 @@ class Player:
     for action1_str in player1.get_actions()[0]:
       table.append([])
       for action2_str in player2.get_actions()[0]:
-        payoff = evaluator.eval_func(action1_str, action2_str, player1, player2)
+        payoff = evaluator.eval(action1_str, action2_str, player1, player2)
         table[-1].append(payoff)
     return np.array(table)
   
