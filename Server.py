@@ -3,8 +3,7 @@ from Game import Game
 from copy import deepcopy
 import numpy as np
 from PrepareSocket import *
-
-
+from AI import *
 
 
 class ClientWrapper:
@@ -30,7 +29,7 @@ class AI_Client(ClientWrapper):
     AI_Client.AI_Client_count += 1
     self.name = f'AI_{AI_Client.AI_Client_count}'
   def create_player(self):
-    self.player = Player(self.name)
+    self.player = Player(self.name, eval_1)
   def send_message(self, message):
     pass
   def end_session(self):
@@ -48,7 +47,7 @@ class Networked_Client(ClientWrapper):
   def create_player(self):
     self.connection.send("Send name: ".encode())
     name = (self.connection.recv(BUF_SIZE)).decode('utf-8')
-    self.player = Player(name)
+    self.player = Player(name, None)
   def send_message(self, message):
     self.connection.send(message.encode())
   def end_session(self):
@@ -87,10 +86,10 @@ def enumerate_choices(choices):
 # UNIT TESTING
 # Testing Player.get_payout_table
 want = [['Dodge', 'Block', 'Charge', 'Kamehameha'], [0,0,-1,1],[0,0,-1,-1],[1,1,0,-1],[-1,1,1,0]]
-test_player1, test_player2 = Player(''), Player('')
+test_player1, test_player2 = Player('', eval_1), Player('', eval_1)
 test_player1.increase_charge()
 test_player2.increase_charge()
-got = Player.get_payout_table(test_player1, test_player2)
+got = Player.get_payout_table(test_player1, test_player2, test_player1.ai_eval_func)
 got.insert(0, test_player1.get_actions()[0])
 assert(got == want)
 
