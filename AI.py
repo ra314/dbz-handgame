@@ -6,6 +6,8 @@ from Evasion import Evasion
 # Eval is positive if the person performing action1 ends up better off
 # Game is assumed to be zero sum
 
+
+
 def eval_1(action1_str, action2_str, player1, player2):
   if action1_str == "Charge":
     if action2_str in Player.evasive_actions:
@@ -35,3 +37,7 @@ def eval_1(action1_str, action2_str, player1, player2):
   # Since it doesn't matter who played it and we assume the game is zero sum
   else:
     assert(False)
+
+
+
+eval_funcs = [eval_1]
