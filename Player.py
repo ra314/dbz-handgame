@@ -63,6 +63,8 @@ class Player:
       eqs = Player.nash_games[key]
     else:
       payoff_table = Player.get_payout_table(self, player2, self.evaluator)
+      print(self, player2)
+      print(payoff_table)
       dbz = nash.Game(payoff_table)
       eqs = list(dbz.support_enumeration())
       Player.nash_games[key] = eqs

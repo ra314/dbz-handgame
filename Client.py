@@ -6,9 +6,11 @@ import sys
 # Responding to the server
 def respond(sock):
 	# Sending back a message, if the input isn't empty
-	message = input()
-	if message:
-		sock.send(message.encode())
+	while True:
+	  message = input()
+	  if message:
+		  sock.send(message.encode())
+		  break
 
 def read_from_network(data_queue, sock):
   while True:

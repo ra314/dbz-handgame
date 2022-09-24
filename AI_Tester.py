@@ -16,6 +16,7 @@ def run_test():
   result_table = []
   for evaluator_1 in evaluators:
     for evaluator_2 in evaluators:
+      Player.nash_games = {}
       wins, draws, losses = 0, 0, 0
       for i in range(100):
         client1, client2 = AI_Client(None, evaluator_1), AI_Client(None, evaluator_2)

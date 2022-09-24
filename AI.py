@@ -84,4 +84,25 @@ class Evaluator_1(Evaluator):
   def attack_attack(self, action1_str, action2_str, player1, player2):
     return (indexed_attacks[action1_str].power - indexed_attacks[action2_str].power)//10
 
-evaluators = [Evaluator_1()]
+# With this
+class Evaluator_2(Evaluator):
+  def player_hasher(self, player):
+    return player.num_charges
+  def charge_evade(self, action1_str, action2_str, player1, player2):
+    return +1
+  def charge_charge(self, action1_str, action2_str, player1, player2):
+    return 0
+  def charge_attack(self, action1_str, action2_str, player1, player2):
+    return -player1.num_charges
+  def evade_evade(self, action1_str, action2_str, player1, player2):
+    return 0
+  def evade_attack_miss(self, action1_str, action2_str, player1, player2):
+    return +indexed_attacks[action2_str].num_charges_needed
+  def evade_attack_hit(self, action1_str, action2_str, player1, player2):
+    return -player1.num_charges
+  def attack_attack(self, action1_str, action2_str, player1, player2):
+    player1_remaining_charges = player1.num_charges - indexed_attacks[action1_str].num_charges_needed
+    player2_remaining_charges = player2.num_charges - indexed_attacks[action2_str].num_charges_needed
+    return -player1_remaining_charges+player2_remaining_charges
+
+evaluators = [Evaluator_1(), Evaluator_2()]
