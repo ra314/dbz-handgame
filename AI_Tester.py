@@ -16,9 +16,10 @@ NUM_SAMPLES = 1000
 
 def run_test():
   result_table = [[""] + [evaluator.name() for evaluator in evaluators]]
-  for evaluator_1 in evaluators:
+  for i, evaluator_1 in enumerate(evaluators):
     result_table.append([evaluator_1.name()])
-    for evaluator_2 in evaluators:
+    result_table[-1].extend(['x']*(i+1))
+    for evaluator_2 in evaluators[i+1:]:
       Player.nash_games = {}
       wins, draws, losses = 0, 0, 0
       for i in range(NUM_SAMPLES):
