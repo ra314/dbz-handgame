@@ -50,13 +50,13 @@ class Networked_Client(ClientWrapper):
     self.connection = connection
     self.player = None
   def create_player(self):
-    self.connection.send("Send name: ".encode())
+    self.send_message("Send name: ")
     name = (self.connection.recv(BUF_SIZE)).decode('utf-8')
     self.player = Player(name, None)
   def send_message(self, message):
     self.connection.send(message.encode())
   def end_session(self):
-	  self.connection.send("Session Over.\n".encode())
+	  self.send_message("Session Over.\n")
   def select_action(self, game_state_str):
     actions_str, actions = self.player.get_actions()
     assert(len(actions_str)>0)
@@ -67,7 +67,7 @@ class Networked_Client(ClientWrapper):
 		              f"{enumerate_choices(actions_str)}{separator}")
 
     while True:
-      self.connection.send(message_to_client.encode())
+      self.send_message(message_to_client)
       print("Waiting for response")
       response = (self.connection.recv(BUF_SIZE)).decode('utf-8')
       if not response.isdigit():
