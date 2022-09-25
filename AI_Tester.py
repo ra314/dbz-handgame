@@ -12,13 +12,16 @@ def pretty_print(matrix):
   table = [fmt.format(*row) for row in s]
   return '\n'.join(table)
 
+NUM_SAMPLES = 100000
+
 def run_test():
-  result_table = []
+  result_table = [[""] + [evaluator.name() for evaluator in evaluators]]
   for evaluator_1 in evaluators:
+    result_table.append([evaluator_1.name()])
     for evaluator_2 in evaluators:
       Player.nash_games = {}
       wins, draws, losses = 0, 0, 0
-      for i in range(100):
+      for i in range(NUM_SAMPLES):
         client1, client2 = AI_Client(None, evaluator_1), AI_Client(None, evaluator_2)
         client1.create_player()
         client2.create_player()
@@ -38,16 +41,24 @@ def run_test():
             losses += 1
         else:
           assert(False)
-        print((wins, draws, losses))
-      result_table.append((wins, draws, losses))
-  return pretty_print(result_table)
+        print((wins, draws, losses, format_w_l(wins, losses)))
+      result_table[-1].append((wins, draws, losses, format_w_l(wins, losses)))
+  return result_table
+
+def format_w_l(wins, losses):
+  return ('+' if wins >= losses else '') + str(wins-losses)
 
 import cProfile
-cProfile.run('run_test()', 'restats')
-
-
 import pstats
 from pstats import SortKey
-p = pstats.Stats('restats')
-p.strip_dirs().sort_stats(-1).print_stats()
-p.sort_stats(SortKey.CUMULATIVE).print_stats(10)
+import pdb;
+if __name__ == "__main__":
+  perform_profiling = input("Perform profiling? (Y/N): ").lower() == "y"
+  if perform_profiling:
+    cProfile.run('run_test()', 'restats')
+    p = pstats.Stats('restats')
+    p.strip_dirs().sort_stats(-1).print_stats()
+    p.sort_stats(SortKey.CUMULATIVE).print_stats(10)
+  else:
+    results = run_test()
+    print(pretty_print(results))

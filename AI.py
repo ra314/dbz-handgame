@@ -38,7 +38,10 @@ class Evaluator(ABC):
     # Since it doesn't matter who played it and we assume the game is zero sum
     else:
       assert(False)
-    
+  
+  @abstractmethod
+  def name(self):
+    return "Abstract Class"
   # This is used to avoid repeatedly calculating the payout table if the relevant conditions
   # (in this case the state of the player) is the same.
   @abstractmethod
@@ -67,6 +70,8 @@ class Evaluator(ABC):
     pass
 
 class Evaluator_1(Evaluator):
+  def name(self):
+    return "OG"
   def player_hasher(self, player):
     return player.num_charges
   def charge_evade(self, action1_str, action2_str, player1, player2):
@@ -86,6 +91,8 @@ class Evaluator_1(Evaluator):
 
 # With this
 class Evaluator_2(Evaluator):
+  def name(self):
+    return "v2"
   def player_hasher(self, player):
     return player.num_charges
   def charge_evade(self, action1_str, action2_str, player1, player2):

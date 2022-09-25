@@ -63,13 +63,13 @@ class Player:
       eqs = Player.nash_games[key]
     else:
       payoff_table = Player.get_payout_table(self, player2, self.evaluator)
-      print(self, player2)
-      print(payoff_table)
+      #print(self.draw(), player2.draw())
+      #print(payoff_table)
       dbz = nash.Game(payoff_table)
-      eqs = list(dbz.support_enumeration())
+      eqs = list(dbz.vertex_enumeration())
       Player.nash_games[key] = eqs
     actions_str, actions = self.get_actions()
-    selected_index = np.random.choice(len(actions_str), 1, p=eqs[0][0])[0]
+    selected_index = np.random.choice(len(actions_str), 1, p=np.abs(eqs[0][0]))[0]
     return eqs, actions_str[selected_index], actions[selected_index]
   
   # This should be updated to 
