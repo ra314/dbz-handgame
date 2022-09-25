@@ -12,7 +12,7 @@ def pretty_print(matrix):
   table = [fmt.format(*row) for row in s]
   return '\n'.join(table)
 
-NUM_SAMPLES = 100000
+NUM_SAMPLES = 100
 
 def run_test():
   result_table = [[""] + [evaluator.name() for evaluator in evaluators]]
@@ -41,12 +41,15 @@ def run_test():
             losses += 1
         else:
           assert(False)
-        print((wins, draws, losses, format_w_l(wins, losses)))
-      result_table[-1].append((wins, draws, losses, format_w_l(wins, losses)))
+        print((wins, draws, losses, format_w_l(wins, losses), format_w_l_percent(wins, losses)))
+      result_table[-1].append((wins, draws, losses, format_w_l(wins, losses), format_w_l_percent(wins, losses)))
   return result_table
 
 def format_w_l(wins, losses):
   return ('+' if wins >= losses else '') + str(wins-losses)
+
+def format_w_l_percent(wins, losses):
+  return ('+' if wins >= losses else '') + f'{(((wins-losses)/NUM_SAMPLES)*100):.4f}'
 
 import cProfile
 import pstats
