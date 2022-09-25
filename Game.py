@@ -6,6 +6,7 @@ class Game:
 	  self._players = (player1, player2)
 	  self.draw_buffer = []
 	  self._start()
+	  self.num_turns = 0
 
   def draw(self):
 	  return (
@@ -31,6 +32,8 @@ class Game:
     # reset_evasion_state
     for player in self._players:
       player.reset_evasion_state()
+    
+    self.num_turns += 1
   
   def get_other_player(self, player):
     index = self._players.index(player)

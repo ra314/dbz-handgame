@@ -12,7 +12,7 @@ def pretty_print(matrix):
   table = [fmt.format(*row) for row in s]
   return '\n'.join(table)
 
-NUM_SAMPLES = 100
+NUM_SAMPLES = 1000
 
 def run_test():
   result_table = [[""] + [evaluator.name() for evaluator in evaluators]]
@@ -41,7 +41,7 @@ def run_test():
             losses += 1
         else:
           assert(False)
-        print((wins, draws, losses, format_w_l(wins, losses), format_w_l_percent(wins, losses)))
+        print((f'num turns: {game.num_turns}', f'total games: {wins+losses+draws}', format_w_l_percent(wins, losses)))
       result_table[-1].append((wins, draws, losses, format_w_l(wins, losses), format_w_l_percent(wins, losses)))
   return result_table
 

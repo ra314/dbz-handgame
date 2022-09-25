@@ -69,6 +69,11 @@ class Evaluator(ABC):
   def attack_attack(self, action1_str, action2_str, player1, player2):
     pass
 
+# The evaluators ASSUME num_charges_needed * 10 = power of an attack.
+
+# Does not consider previous actions.
+# Does not consider the consequence of losing charges when hit by an attack.
+# When hit by an attack, the eval is the same as the power of that attack.
 class Evaluator_1(Evaluator):
   def name(self):
     return "OG"
@@ -89,7 +94,12 @@ class Evaluator_1(Evaluator):
   def attack_attack(self, action1_str, action2_str, player1, player2):
     return (indexed_attacks[action1_str].power - indexed_attacks[action2_str].power)//10
 
-# With this
+# Does not consider previous actions.
+# Considers consequence of losing charges when hit by an attack.
+# When hit by an attack, the damage it carries does not matter, only the number of charges lost.
+# It considers 1 held charge to be just as good as 1 damage dealth.
+# Because of this when an attack is landed the only matter of significance is how many charges
+# the opponent lost as a consequence.
 class Evaluator_2(Evaluator):
   def name(self):
     return "v2"
@@ -112,4 +122,35 @@ class Evaluator_2(Evaluator):
     player2_remaining_charges = player2.num_charges - indexed_attacks[action2_str].num_charges_needed
     return -player1_remaining_charges+player2_remaining_charges
 
-evaluators = [Evaluator_1(), Evaluator_2()]
+# Does not consider previous actions.
+# epsilon = value(1 damage)/value(1 charge)
+# The higher epsilon is, the more emphasis is placed on landing a hit.
+class Evaluator_3(Evaluator):
+  # calc_value_of_attack
+  def cvoa(self, charges_spent):
+    EPSILON = 2
+    return - charges_spent + (charges_spent*EPSILON)
+  def name(self):
+    return "v3"
+  def player_hasher(self, player):
+    return player.num_charges
+  def charge_evade(self, action1_str, action2_str, player1, player2):
+    return +1
+  def charge_charge(self, action1_str, action2_str, player1, player2):
+    return 0
+  def charge_attack(self, action1_str, action2_str, player1, player2):
+    return -self.cvoa(indexed_attacks[action2_str].num_charges_needed)
+  def evade_evade(self, action1_str, action2_str, player1, player2):
+    return 0
+  def evade_attack_miss(self, action1_str, action2_str, player1, player2):
+    return +indexed_attacks[action2_str].num_charges_needed
+  def evade_attack_hit(self, action1_str, action2_str, player1, player2):
+    return -player1.num_charges-self.cvoa(indexed_attacks[action2_str].num_charges_needed)
+  def attack_attack(self, action1_str, action2_str, player1, player2):
+    player1_remaining_charges = player1.num_charges - indexed_attacks[action1_str].num_charges_needed
+    player2_remaining_charges = player2.num_charges - indexed_attacks[action2_str].num_charges_needed
+    spent_charges1 = indexed_attacks[action1_str].num_charges_needed
+    spent_charges2 = indexed_attacks[action2_str].num_charges_needed
+    return -player1_remaining_charges+player2_remaining_charges+self.cvoa(spent_charges1)-self.cvoa(spent_charges2)
+
+evaluators = [Evaluator_1(), Evaluator_2(), Evaluator_3()]
